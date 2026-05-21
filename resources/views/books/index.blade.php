@@ -3,49 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bookstore Catalogue</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>បញ្ជីសៀវភៅ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-
-    <div class="max-w-6xl mx-auto">
-        <h1 class="text-3xl font-extrabold text-gray-900 text-center mb-8 tracking-tight">
-            📚 Bookstore Digital Catalogue
-        </h1>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach ($books as $book)
-                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between p-6 transition duration-300 hover:shadow-xl">
-                    
-                    <div>
-                        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 mb-3">
-                            {{ $book->category->name ?? 'Uncategorized' }}
-                        </span>
-
-                        <h2 class="text-xl font-bold text-gray-900 mb-1 tracking-tight">
-                            {{ $book->title }}
-                        </h2>
-
-                        <p class="text-sm font-medium text-gray-500 mb-4">
-                            by <span class="text-gray-800 font-semibold">{{ $book->author->name ?? 'Unknown Author' }}</span>
-                        </p>
-
-                        <hr class="border-gray-100 my-3">
-
-                        <p class="text-sm text-gray-600 italic line-clamp-4">
-                            "{{ $book->bookDetail->description ?? 'No description available for this edition.' }}"
-                        </p>
-                    </div>
-
-                    <div class="mt-4 pt-3 border-t border-gray-50 text-right">
-                        <span class="text-xs text-gray-400 font-mono">ID: #{{ $book->id }}</span>
-                    </div>
-
-                </div>
-            @endforeach
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-primary fw-bold">ប្រព័ន្ធគ្រប់គ្រងសៀវភៅ</h2>
+            <a href="{{ route('books.create') }}" class="btn btn-success">+ បន្ថែមសៀវភៅថ្មី</a>
         </div>
-        
-    </div>
 
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        <div class="card shadow border-0">
+            <div class="card-body p-4">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>ចំណងជើងសៀវភៅ</th>
+                            <th>អ្នកនិពន្ធ</th>
+                            <th>ប្រភេទសៀវភៅ</th>
+                            <th>ការពិពណ៌នា</th>
+                            <th class="text-center">សកម្មភាព</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($books as $book)
+                        <tr>
+                            <td>{{ $book->id }}</td>
+                            <td class="fw-bold text-secondary">{{ $book->title }}</td>
+                            <td><span class="badge bg-info text-dark">{{ $book->author->name ?? 'មិនមានទិន្នន័យ' }}</span></td>
+                            <td><span class="badge bg-secondary">{{ $book->category->name ?? 'មិនមានទិន្នន័យ' }}</span></td>
+                            <td class="text-muted small">{{ $book->bookDetail->description ?? 'មិនមានការពិពណ៌នា' }}</td>
+                            <td class="text-center">
+                                <a href="{{ route('books.edit', $book->id) }}" class="btn btn-warning btn-sm me-2">កែប្រែ</a>
+
+                                <form action="{{ route('books.destroy', $book->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('តើអ្នកពិតជាចង់លុបមែនទេ?')">លុប</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

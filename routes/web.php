@@ -1,13 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-// Change this line to include "\Api" 
-use App\Http\Controllers\Api\BookController; 
+use App\Http\Controllers\BookController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Your web UI route remains exactly the same!
+
 Route::get('/ui/books', [BookController::class, 'uiIndex'])->name('books.ui');
+Route::get('/ui/books/create', [BookController::class, 'create'])->name('books.create');
+Route::post('/ui/books', [BookController::class, 'store'])->name('books.store');
+Route::get('/ui/books/{id}/edit', [BookController::class, 'edit'])->name('books.edit');
+Route::put('/ui/books/{id}', [BookController::class, 'update'])->name('books.update');
+Route::delete('/ui/books/{id}', [BookController::class, 'destroy'])->name('books.destroy');
